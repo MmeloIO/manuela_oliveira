@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparativo de Cartões | Manuela Oliveira</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0C1A;
+    --navy: #1E2761;
+    --navy-light: #263080;
+    --gold: #C9A84C;
+    --gold-light: #E2C57A;
+    --white: #F0EDE6;
+    --muted: #7A7E98;
+    --card-bg: #10132A;
+    --border: rgba(201,168,76,0.13);
+    --green: #2ECC8A;
+    --red: #E05C5C;
+    --amber: #E8A93A;
+    --blue: #5B9CF6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--white); font-family:'DM Sans',sans-serif; font-weight:300; line-height:1.6; }
+
+  /* HEADER */
+  .header { padding:44px 44px 28px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .header-label { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; font-weight:500; }
+  .header h1 { font-family:'Playfair Display',serif; font-size:28px; font-weight:600; line-height:1.2; }
+  .header-meta { text-align:right; }
+  .header-meta p { font-size:12px; color:var(--muted); line-height:1.8; }
+  .header-meta strong { color:var(--gold-light); font-weight:500; }
+
+  /* CONTEXT BAR */
+  .context-bar { display:flex; gap:32px; padding:18px 44px; background:rgba(30,39,97,.2); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .ctx { display:flex; flex-direction:column; gap:2px; }
+  .ctx span { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:500; }
+  .ctx strong { font-size:14px; font-weight:600; }
+
+  /* MAIN */
+  .main { padding:40px 44px 60px; max-width:1120px; margin:0 auto; }
+
+  /* SECTION HEADING */
+  .section-h { display:flex; align-items:center; gap:14px; margin-bottom:22px; margin-top:40px; }
+  .section-h:first-child { margin-top:0; }
+  .section-h h2 { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--gold); white-space:nowrap; }
+  .section-h::after { content:''; flex:1; height:1px; background:var(--border); }
+  .tier-badge { font-size:9px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; padding:3px 9px; border-radius:4px; }
+  .tier-1 { background:rgba(46,204,138,.12); color:var(--green); }
+  .tier-2 { background:rgba(201,168,76,.15); color:var(--gold-light); }
+  .tier-3 { background:rgba(91,156,246,.12); color:var(--blue); }
+
+  /* GRID */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:18px; margin-bottom:12px; }
+
+  /* CARD */
+  .c { background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:26px; position:relative; transition:border-color .2s; }
+  .c:hover { border-color:rgba(201,168,76,.3); }
+  .c.star { border-color:var(--gold); background:linear-gradient(135deg,#131830 0%,#181d3a 100%); }
+  .c.has { border-color:rgba(91,156,246,.35); }
+
+  /* FLAG */
+  .flag { position:absolute; top:-1px; right:18px; font-size:8.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; padding:4px 9px; border-radius:0 0 6px 6px; }
+  .flag-gold { background:var(--gold); color:var(--bg); }
+  .flag-blue { background:rgba(91,156,246,.85); color:#fff; }
+
+  .c-bank { font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:3px; font-weight:500; }
+  .c-name { font-family:'Playfair Display',serif; font-size:18px; font-weight:600; line-height:1.2; margin-bottom:18px; }
+
+  /* BIG NUMBER */
+  .pts { display:flex; align-items:baseline; gap:5px; margin-bottom:4px; }
+  .pts-n { font-family:'Playfair Display',serif; font-size:40px; font-weight:700; color:var(--gold); line-height:1; }
+  .pts-u { font-size:12px; color:var(--muted); }
+  .pts-sub { font-size:11px; color:var(--muted); margin-bottom:18px; }
+
+  /* DIVIDER */
+  hr { border:none; border-top:1px solid var(--border); margin:14px 0; }
+
+  /* ATTRS */
+  .attrs { list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .attrs li { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+  .ak { font-size:11.5px; color:var(--muted); flex-shrink:0; }
+  .av { font-size:11.5px; color:var(--white); font-weight:500; text-align:right; line-height:1.4; }
+
+  /* BADGE */
+  .b { display:inline-flex; align-items:center; padding:2px 7px; border-radius:3px; font-size:9.5px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+  .bg { background:rgba(46,204,138,.12); color:var(--green); }
+  .br { background:rgba(224,92,92,.12); color:var(--red); }
+  .ba { background:rgba(232,169,58,.12); color:var(--amber); }
+  .bb { background:rgba(201,168,76,.14); color:var(--gold-light); }
+
+  /* PROS/CONS */
+  .pc { margin-top:14px; display:flex; flex-direction:column; gap:5px; }
+  .pro,.con,.n { font-size:11px; display:flex; align-items:flex-start; gap:5px; line-height:1.45; color:var(--muted); }
+  .pro::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; font-size:11px; }
+  .con::before { content:'✕'; color:var(--red); font-weight:700; flex-shrink:0; font-size:11px; }
+  .n::before { content:'·'; color:var(--gold); font-size:15px; line-height:1; flex-shrink:0; }
+
+  /* SIMULATION */
+  .sim { background:linear-gradient(135deg,#10132a,#0d1020); border:1px solid var(--border); border-radius:12px; padding:30px; margin:32px 0; }
+  .sim-title { font-family:'Playfair Display',serif; font-size:15px; font-weight:600; color:var(--gold); margin-bottom:6px; }
+  .sim-sub { font-size:12px; color:var(--muted); margin-bottom:22px; }
+  .sim-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+  .sc { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:8px; padding:14px; text-align:center; }
+  .sc.best { border-color:rgba(201,168,76,.4); }
+  .sc-name { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
+  .sc-n { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:var(--gold); line-height:1; }
+  .sc-nl { font-size:10px; color:var(--muted); margin-bottom:8px; }
+  .sc-val { font-size:12px; color:var(--white); font-weight:500; }
+  .sc-vsub { font-size:10px; color:var(--muted); margin-top:2px; }
+
+  /* VERDICT */
+  .verdict { background:rgba(201,168,76,.05); border:1px solid rgba(201,168,76,.22); border-radius:12px; padding:28px 32px; margin-top:32px; }
+  .verdict-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:600; color:var(--gold); margin-bottom:14px; }
+  .verdict p { font-size:13px; color:var(--white); line-height:1.8; margin-bottom:10px; opacity:.9; }
+  .verdict p:last-child { margin-bottom:0; }
+  .verdict strong { color:var(--gold-light); font-weight:600; }
+
+  /* ALERT */
+  .alert { background:rgba(232,169,58,.07); border-left:3px solid var(--amber); border-radius:0 8px 8px 0; padding:12px 16px; font-size:12px; color:var(--white); opacity:.85; margin:18px 0; line-height:1.6; }
+  .alert strong { color:var(--amber); }
+
+  /* TABLE */
+  .table-wrap { overflow-x:auto; margin:22px 0 32px; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { background:rgba(30,39,97,.5); color:var(--gold); font-weight:600; letter-spacing:.06em; font-size:10px; text-transform:uppercase; padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); }
+  td { padding:10px 14px; border-bottom:1px solid rgba(201,168,76,.07); color:var(--white); vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,.02); }
+  td.center { text-align:center; }
+  .star-row td { background:rgba(201,168,76,.04); }
+
+  /* FOOTER */
+  footer { padding:22px 44px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  footer p { font-size:11px; color:var(--muted); }
+  footer strong { color:var(--gold); font-weight:500; }
+
+  @media(max-width:640px){
+    .header,.context-bar,.main,footer { padding-left:20px; padding-right:20px; }
+    .grid { grid-template-columns:1fr; }
+    .sim-grid { grid-template-columns:1fr 1fr; }
+    .header { align-items:flex-start; }
+    .header-meta { text-align:left; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div>
+    <p class="header-label">Planejamento Financeiro Pessoal</p>
+    <h1>Comparativo Completo<br>de Cartões de Crédito</h1>
+  </div>
+  <div class="header-meta">
+    <p>Cliente <strong>Manuela Oliveira</strong></p>
+    <p>Gasto mensal estimado <strong>R$ 15–18 mil</strong></p>
+    <p>Perfil <strong>Pessoal + Empresa · Pontos &amp; Milhas</strong></p>
+    <p>Atualizado <strong>Junho de 2026</strong></p>
+  </div>
+</header>
+
+<div class="context-bar">
+  <div class="ctx"><span>Bancos atuais</span><strong>Santander · Inter · BTG</strong></div>
+  <div class="ctx"><span>Fatura estimada</span><strong>~R$ 16.500/mês</strong></div>
+  <div class="ctx"><span>Gasto anual</span><strong>~R$ 198.000</strong></div>
+  <div class="ctx"><span>Critério principal</span><strong>Pontos / Milhas</strong></div>
+  <div class="ctx"><span>Cartão já em mãos</span><strong>BTG Black ✓</strong></div>
+</div>
+
+<main class="main">
+
+  <!-- ============ TIER 1: ACESSÍVEIS / JÁ TEM ============ -->
+  <div class="section-h">
+    <h2>Cartões que ela já tem ou acessa facilmente</h2>
+    <span class="tier-badge tier-1">Aprovação imediata</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- BTG BLACK -->
+    <div class="c has">
+      <span class="flag flag-blue">Já tem</span>
+      <p class="c-bank">BTG Pactual</p>
+      <h3 class="c-name">BTG Black<br>Mastercard Black</h3>
+      <div class="pts"><span class="pts-n">2,2</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Programa BTG → LATAM, Azul, Smiles</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av">Isenta: R$ 3k/fatura <em>ou</em> R$ 30k invest.</span></li>
+        <li><span class="ak">Cashback alt.</span><span class="av">1% na fatura (opcional)</span></li>
+        <li><span class="ak">VIP</span><span class="av">LoungeKey (mín. R$ 3k fatura)</span></li>
+        <li><span class="ak">Esfera</span><span class="av"><span class="b br">Encerrada 03/2026</span></span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Anuidade já isenta com o gasto dela</p>
+        <p class="pro">IOF especial nas compras internacionais</p>
+        <p class="con">Pontuação mais baixa do comparativo</p>
+        <p class="con">Menos parceiros de transferência após fim da Esfera</p>
+        <p class="n">Upgrade para TAP BTG: até 4 pts/dólar, focado na TAP</p>
+      </div>
+    </div>
+
+    <!-- SANTANDER UNIQUE -->
+    <div class="c">
+      <p class="c-bank">Santander</p>
+      <h3 class="c-name">Unique<br>Visa Infinite / MC Black</h3>
+      <div class="pts"><span class="pts-n">2,0</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Nacional · 3,0 pts em internacional · Esfera</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av">R$ 996/ano</span></li>
+        <li><span class="ak">Isenção</span><span class="av">2 de 3: R$ 8k fatura, R$ 50k invest. ou conta ativa</span></li>
+        <li><span class="ak">VIP</span><span class="av">Acessos limitados/ano</span></li>
+        <li><span class="ak">Promoção</span><span class="av">Bateu Ganhou: até 5,1 pts/dólar</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Isenção automática com o gasto dela (conta ativa + R$ 8k)</p>
+        <p class="pro">Bateu Ganhou recorrente — janelas muito competitivas</p>
+        <p class="pro">Boa pontuação no exterior (3,0 pts)</p>
+        <p class="con">2,0 pts nacional abaixo da concorrência</p>
+        <p class="n">Disponível nas versões MC Black e Visa Infinite</p>
+      </div>
+    </div>
+
+    <!-- NUBANK ULTRAVIOLETA -->
+    <div class="c">
+      <p class="c-bank">Nubank</p>
+      <h3 class="c-name">Ultravioleta<br>Mastercard Black</h3>
+      <div class="pts"><span class="pts-n">2,2</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Ou 1,25% cashback · 9 pts em Nu Viagens</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av">R$ 89/mês → <span class="b bg">Isenta R$ 8k/fatura</span></span></li>
+        <li><span class="ak">VIP</span><span class="av">Lounge próprio GRU + 4 Priority Pass/ano</span></li>
+        <li><span class="ak">IOF</span><span class="av"><span class="b bg">Zero em compras internacionais</span></span></li>
+        <li><span class="ak">Transfere para</span><span class="av">LATAM Pass, Azul, Smiles</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">IOF zero no exterior — diferencial real para quem viaja</p>
+        <p class="pro">Anuidade isenta com seu nível de gasto</p>
+        <p class="pro">App intuitivo e experiência digital top</p>
+        <p class="con">Pontuação não é a mais alta do mercado</p>
+        <p class="con">Atendimento ainda via chatbot (não exclusivo)</p>
+        <p class="n">1 ano grátis sendo ofertado para clientes selecionados</p>
+      </div>
+    </div>
+
+    <!-- C6 CARBON -->
+    <div class="c star">
+      <span class="flag flag-gold">Recomendado</span>
+      <p class="c-bank">C6 Bank</p>
+      <h3 class="c-name">C6 Carbon<br>Mastercard Black</h3>
+      <div class="pts"><span class="pts-n">2,5</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Base · até 3,5 pts com investimentos · Programa Átomos</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av"><span class="b bg">Isenta automática com R$ 8k/fatura</span></span></li>
+        <li><span class="ak">VIP</span><span class="av">Ilimitado + convidados</span></li>
+        <li><span class="ak">Pts nunca expiram</span><span class="av">Sim ✓</span></li>
+        <li><span class="ak">Transfere para</span><span class="av">Livelo, LATAM, Smiles, Azul, TAP</span></li>
+        <li><span class="ak">Conta global</span><span class="av">Em dólar — compras ext. sem IOF extra</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Melhor custo-benefício do grupo acessível</p>
+        <p class="pro">Anuidade isenta sem condicional de banco</p>
+        <p class="pro">Pontos sem validade — acumula sem pressão</p>
+        <p class="pro">Mais parceiros de transferência do grupo</p>
+        <p class="pro">VIP ilimitado sem custo extra</p>
+        <p class="n">Abre conta nova no C6 — processo 100% digital</p>
+      </div>
+    </div>
+
+    <!-- XP INFINITE -->
+    <div class="c">
+      <p class="c-bank">XP Investimentos</p>
+      <h3 class="c-name">XP Infinite<br>Visa Infinite</h3>
+      <div class="pts"><span class="pts-n">2,2</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Base · até 3 pts com relacionamento · Programa XP → Livelo</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av"><span class="b bg">Zero vitalícia</span> com R$ 50k invest. na XP</span></li>
+        <li><span class="ak">VIP</span><span class="av">4 acessos/ano Dragon Pass</span></li>
+        <li><span class="ak">Investback</span><span class="av">Cashback que vira investimento na XP</span></li>
+        <li><span class="ak">Pts nunca expiram</span><span class="av">Sim ✓</span></li>
+        <li><span class="ak">Alt.</span><span class="av">Até 1,5% investback na fatura</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Anuidade zero real — sem condicional de gasto</p>
+        <p class="pro">Investback: cashback que já entra como investimento</p>
+        <p class="pro">Pontos sem validade</p>
+        <p class="con">Só 4 acessos VIP/ano (Inter e BTG são melhores aqui)</p>
+        <p class="con">Requer concentrar investimentos na XP (R$ 50k+)</p>
+        <p class="n">Interessante se ela já investe ou vier a investir na XP</p>
+      </div>
+    </div>
+
+    <!-- INTER WIN / PRIME -->
+    <div class="c has">
+      <span class="flag flag-blue">Banco atual</span>
+      <p class="c-bank">Banco Inter</p>
+      <h3 class="c-name">Inter Win Black<br>Mastercard Black</h3>
+      <div class="pts"><span class="pts-n">2,0</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">1 pt/R$2 gasto · Programa Loop · transfere Azul</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av"><span class="b bg">Zero para sempre</span></span></li>
+        <li><span class="ak">VIP</span><span class="av">Priority Pass ilimitado (nível Win)</span></li>
+        <li><span class="ak">Pts validade</span><span class="av">6 meses (renova com compra)</span></li>
+        <li><span class="ak">Win exige</span><span class="av">Volume de investimento no Inter</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Anuidade zero sem nenhuma condicional de gasto</p>
+        <p class="pro">VIP ilimitado no nível Win</p>
+        <p class="con">Pontuação mais fraca — não priorizar para milhas</p>
+        <p class="con">Pts expiram em 6 meses: risco se não usar</p>
+        <p class="con">Transferência basicamente só para Azul</p>
+        <p class="n">Manter pela anuidade zero e VIP, não pela pontuação</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="alert"><strong>⚠ BTG + Esfera:</strong> Parceria encerrada em março de 2026. Os pontos BTG transferem agora para LATAM, Azul e Smiles apenas. Confirme com o banco as promoções de transferência bonificada ativas antes de usar como estratégia principal.</div>
+
+  <!-- ============ TIER 2: PREMIUM / UPGRADE ============ -->
+  <div class="section-h">
+    <h2>Cartões premium — requerem upgrade de relacionamento</h2>
+    <span class="tier-badge tier-2">Relacionamento bancário</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- SANTANDER UNLIMITED SELECT -->
+    <div class="c">
+      <p class="c-bank">Santander</p>
+      <h3 class="c-name">Unlimited Select<br>Visa Infinite / MC Black</h3>
+      <div class="pts"><span class="pts-n">2,6</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Nacional · 3,6 pts em internacional · Esfera</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av">R$ 2.000/ano</span></li>
+        <li><span class="ak">Isenção</span><span class="av">R$ 30k/fatura <em>ou</em> R$ 5MM invest.</span></li>
+        <li><span class="ak">VIP</span><span class="av">Ilimitado + 8 convidados/ano</span></li>
+        <li><span class="ak">Adicionais</span><span class="av">Até 7 sem anuidade</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Pontuação muito superior ao Unique</p>
+        <p class="pro">VIP ilimitado com convidados — excelente para quem viaja</p>
+        <p class="con">Isenção exige R$ 30k/mês — acima do gasto atual dela</p>
+        <p class="con">R$ 2.000 se não isentar</p>
+        <p class="n">Negociar upgrade com o gerente Santander</p>
+      </div>
+    </div>
+
+    <!-- ITAÚ PERSONNALITÉ BLACK -->
+    <div class="c star">
+      <span class="flag flag-gold">Vale investigar</span>
+      <p class="c-bank">Itaú Personnalité</p>
+      <h3 class="c-name">Personnalité Black<br>Mastercard Black</h3>
+      <div class="pts"><span class="pts-n">2,0</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Nacional · 3,0 pts internacional · Pontos não expiram</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av">R$ 1.056/ano</span></li>
+        <li><span class="ak">Isenção</span><span class="av">R$ 10k/fatura <em>ou</em> R$ 50k invest. <em>ou</em> Nível 2+ Minhas Vantagens</span></li>
+        <li><span class="ak">VIP</span><span class="av">2 acessos LoungeKey/ano</span></li>
+        <li><span class="ak">Pts nunca expiram</span><span class="av">Sim ✓</span></li>
+        <li><span class="ak">Transfere para</span><span class="av">LATAM, Azul, Smiles, Multiplus</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Isenção com R$ 10k/mês — ela bate com facilidade</p>
+        <p class="pro">Pontos sem validade</p>
+        <p class="pro">Ecossistema Personnalité: seguros, concierge, Flapper</p>
+        <p class="con">Pontuação nacional (2,0) não é diferencial</p>
+        <p class="con">VIP limitado (2 acessos) para o básico</p>
+        <p class="n">Porta de entrada para The One no futuro</p>
+      </div>
+    </div>
+
+    <!-- ITAÚ THE ONE PERSONNALITÉ -->
+    <div class="c">
+      <p class="c-bank">Itaú Personnalité</p>
+      <h3 class="c-name">The One<br>Mastercard Black (metal)</h3>
+      <div class="pts"><span class="pts-n">3,0</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Nacional · 3,5 pts internacional · Pontos não expiram</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av">R$ 4.000/ano</span></li>
+        <li><span class="ak">Isenção</span><span class="av">Nível 5 Minhas Vantagens <em>ou</em> R$ 60k/fatura</span></li>
+        <li><span class="ak">VIP</span><span class="av">LoungeKey ilimitado + 12 convidados/ano</span></li>
+        <li><span class="ak">Concierge</span><span class="av">"The Assistant" — Michelin, eventos globais</span></li>
+        <li><span class="ak">Exclusividade</span><span class="av">Cartão físico de metal</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Pontuação mais alta do Personnalité</p>
+        <p class="pro">VIP ilimitado com 12 convidados</p>
+        <p class="pro">Concierge diferenciado para quem viaja</p>
+        <p class="con">Anuidade R$ 4k — precisa de relacionamento forte no Itaú</p>
+        <p class="con">Isenção por gasto exige R$ 60k/mês — fora do perfil atual</p>
+        <p class="n">Meta de médio prazo, não imediata para ela</p>
+      </div>
+    </div>
+
+    <!-- SANTANDER UNLIMITED PRIVATE -->
+    <div class="c">
+      <p class="c-bank">Santander</p>
+      <h3 class="c-name">Unlimited Private<br>MC Black / Visa Infinite</h3>
+      <div class="pts"><span class="pts-n">3,0</span><span class="pts-u">pts/dólar</span></div>
+      <p class="pts-sub">Nacional · 4,0 pts internacional · Esfera</p>
+      <hr>
+      <ul class="attrs">
+        <li><span class="ak">Anuidade</span><span class="av">R$ 2.000/ano</span></li>
+        <li><span class="ak">Isenção</span><span class="av">R$ 5MM invest. no Santander/Toro</span></li>
+        <li><span class="ak">VIP</span><span class="av">Ilimitado + 8 convidados/ano</span></li>
+        <li><span class="ak">Segmento</span><span class="av">Private Banking</span></li>
+      </ul>
+      <div class="pc">
+        <p class="pro">Melhor pontuação do Santander</p>
+        <p class="pro">VIP ilimitado</p>
+        <p class="con">Exclusivo para clientes Private — R$ 5MM invest.</p>
+        <p class="con">Fora do alcance atual, mas referência futura</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ SIMULAÇÃO ============ -->
+  <div class="sim">
+    <p class="sim-title">Simulação — R$ 16.500/mês de fatura (base nacional)</p>
+    <p class="sim-sub">Pontos acumulados por ano com ~R$ 198.000 gastos · Valores aproximados</p>
+    <div class="sim-grid">
+      <div class="sc"><p class="sc-name">BTG Black</p><p class="sc-n">~87k</p><p class="sc-nl">pts/ano</p><p class="sc-val">~1 doméstica</p><p class="sc-vsub">econômica ida/volta</p></div>
+      <div class="sc"><p class="sc-name">Nubank UV</p><p class="sc-n">~87k</p><p class="sc-nl">pts/ano</p><p class="sc-val">+ IOF zero</p><p class="sc-vsub">no exterior</p></div>
+      <div class="sc best"><p class="sc-name" style="color:var(--gold)">C6 Carbon ✦</p><p class="sc-n">~99k</p><p class="sc-nl">pts/ano (2,5 base)</p><p class="sc-val">~1–2 domésticas</p><p class="sc-vsub">ou 1 intl. econômica</p></div>
+      <div class="sc"><p class="sc-name">XP Infinite</p><p class="sc-n">~87k</p><p class="sc-nl">pts/ano</p><p class="sc-val">Anuidade zero</p><p class="sc-vsub">+ investback</p></div>
+      <div class="sc"><p class="sc-name">Santander Unique</p><p class="sc-n">~79k</p><p class="sc-nl">pts/ano</p><p class="sc-val">+ Bateu Ganhou</p><p class="sc-vsub">pode turbinar muito</p></div>
+      <div class="sc"><p class="sc-name">Personnalité Black</p><p class="sc-n">~79k</p><p class="sc-nl">pts/ano</p><p class="sc-val">Pts não expiram</p><p class="sc-vsub">isenção fácil</p></div>
+      <div class="sc"><p class="sc-name">Unlimited Select</p><p class="sc-n">~103k</p><p class="sc-nl">pts/ano</p><p class="sc-val">Mais pts do grupo</p><p class="sc-vsub">mas anuidade R$ 2k</p></div>
+      <div class="sc"><p class="sc-name">The One</p><p class="sc-n">~119k</p><p class="sc-nl">pts/ano (3,0)</p><p class="sc-val">Mais pontos de todos</p><p class="sc-vsub">anuidade R$ 4k</p></div>
+    </div>
+  </div>
+
+  <!-- ============ TABELA COMPARATIVA ============ -->
+  <div class="section-h"><h2>Quadro comparativo rápido</h2></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Cartão</th>
+          <th>Pts/dólar (nacional)</th>
+          <th>Pts/dólar (internacional)</th>
+          <th>Anuidade</th>
+          <th>Isenção por gasto</th>
+          <th>VIP</th>
+          <th>Pts expiram?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>BTG Black</td><td>2,2</td><td>2,2</td><td>Modulável</td><td>R$ 3k/mês</td><td>LoungeKey</td><td>Sim</td></tr>
+        <tr><td>Nubank Ultravioleta</td><td>2,2</td><td>2,2 + IOF zero</td><td>R$ 89/mês</td><td>R$ 8k/mês</td><td>GRU + 4 PP/ano</td><td>Não</td></tr>
+        <tr><td>Santander Unique</td><td>2,0</td><td>3,0</td><td>R$ 83/mês</td><td>R$ 8k/mês</td><td>Limitado</td><td>36 meses</td></tr>
+        <tr><td>Inter Win Black</td><td>2,0</td><td>2,0</td><td>Zero</td><td>—</td><td>PP ilimitado</td><td>6 meses</td></tr>
+        <tr class="star-row"><td><strong>C6 Carbon ✦</strong></td><td><strong>2,5–3,5</strong></td><td><strong>2,5–3,5</strong></td><td>R$ 98/mês</td><td><strong>R$ 8k/mês</strong></td><td><strong>Ilimitado</strong></td><td><strong>Não</strong></td></tr>
+        <tr><td>XP Infinite</td><td>2,2–3,0</td><td>2,2–3,0</td><td>Zero</td><td>— (R$ 50k invest.)</td><td>4 acessos/ano</td><td>Não</td></tr>
+        <tr><td>Personnalité Black</td><td>2,0</td><td>3,0</td><td>R$ 88/mês</td><td>R$ 10k/mês</td><td>2 acessos/ano</td><td>Não</td></tr>
+        <tr><td>Unlimited Select</td><td>2,6</td><td>3,6</td><td>R$ 167/mês</td><td>R$ 30k/mês</td><td>Ilimitado + 8 conv.</td><td>Não</td></tr>
+        <tr><td>The One Personnalité</td><td>3,0</td><td>3,5</td><td>R$ 333/mês</td><td>R$ 60k/mês</td><td>Ilimitado + 12 conv.</td><td>Não</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ VEREDICTO ============ -->
+  <div class="verdict">
+    <p class="verdict-title">Veredicto do Planejador — O que fazer na prática</p>
+    <p><strong>Agora, curto prazo:</strong> o <strong>C6 Carbon</strong> é a melhor troca para quem quer maximizar pontos sem pagar anuidade. Com R$ 15–18k de gasto, a isenção é automática, a pontuação supera BTG e Santander, e os pontos nunca expiram — o que dá tranquilidade para acumular sem pressa e transferir quando aparecer uma promoção bonificada na Livelo.</p>
+    <p><strong>BTG Black que já tem:</strong> vale manter. A anuidade está isenta, funciona como cartão reserva e tem o benefício do IOF especial em compras internacionais. Não é o cartão principal de pontos, mas não custa nada.</p>
+    <p><strong>Nubank Ultravioleta:</strong> entra como opção real se ela viaja ao exterior com frequência — o IOF zero é um benefício concreto que nenhum outro do grupo oferece de forma tão simples. Anuidade isenta com R$ 8k/mês.</p>
+    <p><strong>XP Infinite:</strong> interessante se ela vier a concentrar investimentos na XP. Anuidade zero + investback é uma proposta única no mercado. Se não tem R$ 50k na XP hoje, não é prioridade agora.</p>
+    <p><strong>Médio prazo:</strong> o <strong>Itaú Personnalité Black</strong> (porta de entrada) com evolução para <strong>The One</strong> — quando o relacionamento financeiro crescer — entrega os melhores pontos do mercado acessível com anuidade zero pelo programa Minhas Vantagens. Meta para daqui 12–24 meses.</p>
+    <p><strong>O que não recomendo agora:</strong> Santander Unlimited Select exige R$ 30k/mês para isenção — não faz sentido pagar R$ 2k/ano sem isso. Inter Win mantém pela anuidade zero e VIP ilimitado, mas nunca como cartão de pontos.</p>
+  </div>
+
+</main>
+
+<footer>
+  <p>Preparado por <strong>Matheus Melo · Planejador Financeiro Pessoal</strong> · Grão | Grupo Primo</p>
+  <p>Dados atualizados em <strong>junho de 2026</strong> · Sujeito a alterações pelos emissores · Confirme condições nos canais oficiais</p>
+</footer>
+
+</body>
+</html>
