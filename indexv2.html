@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Financeiro — Manuela Oliveira | Junho 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0A0C1A;
+  --bg2: #0D1020;
+  --bg3: #121630;
+  --navy: #1E2761;
+  --gold: #C9A84C;
+  --gold-light: #E2C47A;
+  --gold-dim: rgba(201,168,76,0.13);
+  --gold-glow: rgba(201,168,76,0.06);
+  --green: #2ECC8A;
+  --green-dim: rgba(46,204,138,0.11);
+  --blue: #5B9BF8;
+  --blue-dim: rgba(91,155,248,0.12);
+  --purple: #A87FD4;
+  --purple-dim: rgba(168,127,212,0.12);
+  --orange: #F08C3C;
+  --orange-dim: rgba(240,140,60,0.12);
+  --text: #E8E8F0;
+  --text-muted: #8890B0;
+  --text-dim: #4A5070;
+  --border: rgba(201,168,76,0.18);
+  --border-soft: rgba(255,255,255,0.055);
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+/* ── LOCK ── */
+#lock{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;}
+.lock-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;}
+.lock-icon{font-size:36px;margin-bottom:16px;}
+.lock-title{font-family:var(--serif);font-size:22px;color:var(--white,#fff);margin-bottom:6px;}
+.lock-sub{font-size:13px;color:var(--text-muted);margin-bottom:28px;}
+.lock-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border-soft);border-radius:10px;padding:14px 16px;color:var(--text);font-family:var(--sans);font-size:15px;text-align:center;letter-spacing:4px;outline:none;transition:border-color .2s;}
+.lock-input:focus{border-color:var(--gold);}
+.lock-btn{width:100%;margin-top:14px;background:var(--gold);border:none;border-radius:10px;padding:14px;color:#0A0C1A;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:opacity .2s;}
+.lock-btn:hover{opacity:.88;}
+.lock-error{color:#E05A5A;font-size:12px;margin-top:8px;display:none;}
+#content{display:none;}
+
+/* ── HEADER ── */
+header{background:linear-gradient(145deg,#0A0C1A 0%,#0D1228 60%,#0A0C1A 100%);border-bottom:1px solid var(--border);padding:56px 40px 48px;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;top:-80px;right:-80px;width:360px;height:360px;background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 70%);border-radius:50%;pointer-events:none;}
+header::after{content:'';position:absolute;bottom:-60px;left:10%;width:500px;height:200px;background:radial-gradient(ellipse,rgba(30,39,97,0.3) 0%,transparent 70%);pointer-events:none;}
+.h-eyebrow{font-size:10px;font-weight:600;letter-spacing:3.5px;color:var(--gold);text-transform:uppercase;margin-bottom:18px;position:relative;}
+.h-name{font-family:var(--serif);font-size:clamp(32px,5.5vw,52px);font-weight:700;color:#fff;line-height:1.1;margin-bottom:8px;position:relative;}
+.h-sub{color:var(--text-muted);font-size:14px;margin-bottom:36px;position:relative;}
+.h-badges{display:flex;gap:10px;flex-wrap:wrap;position:relative;}
+.badge{background:var(--gold-dim);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--gold-light);font-weight:500;letter-spacing:.3px;}
+.badge.g{background:var(--green-dim);border-color:rgba(46,204,138,0.22);color:var(--green);}
+
+/* ── NAV TABS ── */
+.nav-tabs{display:flex;gap:0;border-bottom:1px solid var(--border-soft);margin-bottom:0;overflow-x:auto;padding:0 40px;}
+.tab{padding:16px 20px;font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s;letter-spacing:.3px;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── LAYOUT ── */
+main{max-width:900px;margin:0 auto;padding:0 24px 100px;}
+section{margin-top:56px;}
+.s-label{font-size:10px;font-weight:600;letter-spacing:3.5px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.s-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.s-num{width:26px;height:26px;background:var(--gold-dim);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold);flex-shrink:0;}
+.s-title{font-family:var(--serif);font-size:clamp(20px,3.5vw,28px);font-weight:600;color:#fff;margin-bottom:8px;}
+.s-desc{color:var(--text-muted);font-size:13.5px;margin-bottom:28px;line-height:1.65;max-width:640px;}
+
+/* ── MENSAGEM ── */
+.msg-card{background:linear-gradient(135deg,var(--bg2),rgba(30,39,97,0.2));border:1px solid var(--border);border-radius:18px;padding:36px;position:relative;overflow:hidden;}
+.msg-card::before{content:'"';position:absolute;top:-16px;left:24px;font-family:var(--serif);font-size:130px;color:rgba(201,168,76,0.07);line-height:1;pointer-events:none;}
+.msg-text{font-size:15.5px;color:var(--text);line-height:1.85;position:relative;z-index:1;}
+.msg-text strong{color:#fff;}
+.msg-sig{margin-top:22px;display:flex;align-items:center;gap:14px;}
+.msg-sig-line{flex:1;height:1px;background:var(--border-soft);}
+.msg-sig-name{font-size:12px;color:var(--gold);font-weight:600;letter-spacing:.5px;}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;}
+.kpi{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:22px 20px;position:relative;transition:border-color .2s,transform .15s;}
+.kpi:hover{border-color:var(--border);transform:translateY(-1px);}
+.kpi-dot{position:absolute;top:16px;right:16px;width:7px;height:7px;border-radius:50%;}
+.kpi-lbl{font-size:10.5px;font-weight:500;color:var(--text-muted);letter-spacing:.3px;margin-bottom:10px;}
+.kpi-val{font-family:var(--serif);font-size:21px;font-weight:700;color:#fff;line-height:1;margin-bottom:5px;}
+.kpi-sub{font-size:11px;color:var(--text-dim);}
+
+/* ── PROGRESS ── */
+.prog-wrap{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:26px 28px;margin-bottom:14px;}
+.prog-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px;flex-wrap:wrap;}
+.prog-tg .prog-t{font-size:14px;font-weight:600;color:#fff;}
+.prog-tg .prog-s{font-size:11.5px;color:var(--text-muted);margin-top:3px;}
+.prog-pct{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold);white-space:nowrap;}
+.prog-bg{background:rgba(255,255,255,0.05);border-radius:100px;height:9px;overflow:hidden;margin-bottom:10px;}
+.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+.prog-fill.gr{background:linear-gradient(90deg,#1EA870,var(--green));}
+.prog-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);}
+
+/* ── RENDA PASSIVA ── */
+.rp-hero{background:linear-gradient(135deg,rgba(46,204,138,0.07),rgba(30,39,97,0.15));border:1px solid rgba(46,204,138,0.2);border-radius:18px;padding:36px;text-align:center;margin-bottom:20px;}
+.rp-valor{font-family:var(--serif);font-size:clamp(40px,7vw,68px);font-weight:700;color:var(--green);line-height:1;margin-bottom:8px;}
+.rp-lbl{font-size:13px;color:var(--text-muted);margin-bottom:28px;}
+.rp-breakdown{display:flex;justify-content:center;gap:36px;flex-wrap:wrap;}
+.rp-item{text-align:center;}
+.rp-item-val{font-weight:600;color:#fff;font-size:17px;}
+.rp-item-lbl{font-size:11px;color:var(--text-dim);margin-top:2px;letter-spacing:.3px;}
+.rp-note{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:18px 20px;margin-top:16px;}
+.rp-note p{font-size:13px;color:var(--text-muted);line-height:1.65;}
+.rp-note strong{color:var(--text);}
+
+/* ── PROJEÇÃO CHART ── */
+.chart-wrap{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:28px;margin-bottom:14px;}
+.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.chart-title{font-size:14px;font-weight:600;color:#fff;}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;}
+.chart-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);}
+.chart-leg-dot{width:8px;height:8px;border-radius:50%;}
+.chart-canvas{position:relative;height:260px;}
+.chart-meta{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;}
+.chart-meta-item{flex:1;min-width:140px;background:var(--bg3);border-radius:10px;padding:14px 16px;}
+.chart-meta-lbl{font-size:10px;color:var(--text-dim);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;}
+.chart-meta-val{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--gold);}
+
+/* ── TABELA CARTEIRA ── */
+.tbl-wrap{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;overflow:hidden;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead tr{border-bottom:1px solid var(--border-soft);}
+th{text-align:left;font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-dim);padding:14px 16px 12px;}
+th:last-child{text-align:right;}
+td{padding:15px 16px;font-size:13.5px;border-bottom:1px solid rgba(255,255,255,0.035);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.015);}
+.a-name{font-weight:600;color:#fff;font-size:14px;}
+.a-desc{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.a-val{text-align:right;font-weight:600;color:var(--text);font-size:13.5px;}
+.a-pct{text-align:right;font-size:11px;color:var(--text-dim);}
+.liq{font-size:10.5px;color:var(--text-muted);background:rgba(255,255,255,0.04);padding:3px 9px;border-radius:8px;white-space:nowrap;}
+.tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.2px;padding:3px 9px;border-radius:20px;}
+.fii{background:var(--blue-dim);color:var(--blue);}
+.acao{background:var(--green-dim);color:var(--green);}
+.etf{background:var(--gold-dim);color:var(--gold);}
+.rf{background:var(--purple-dim);color:var(--purple);}
+.tit{background:var(--orange-dim);color:var(--orange);}
+
+/* ── TOTAL BAR ── */
+.total-row{display:flex;justify-content:space-between;align-items:center;background:var(--gold-glow);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-top:14px;}
+.total-lbl{font-size:13px;font-weight:600;color:var(--gold-light);}
+.total-val{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold);}
+
+/* ── ALOCAÇÃO VISUAL ── */
+.alloc-bar{display:flex;height:10px;border-radius:100px;overflow:hidden;margin:20px 0 16px;gap:2px;}
+.alloc-seg{height:100%;border-radius:100px;transition:flex .4s;}
+.alloc-legend{display:flex;gap:20px;flex-wrap:wrap;}
+.alloc-leg{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-muted);}
+.alloc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── EDU CARDS ── */
+.edu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
+.edu{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:26px;position:relative;overflow:hidden;transition:border-color .2s,transform .15s;}
+.edu:hover{border-color:var(--border);transform:translateY(-2px);}
+.edu::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;}
+.edu.c-fii::before{background:var(--blue);}
+.edu.c-acao::before{background:var(--green);}
+.edu.c-etf::before{background:var(--gold);}
+.edu.c-titulo::before{background:var(--orange);}
+.edu.c-rf::before{background:var(--purple);}
+.edu-icon{font-size:26px;margin-bottom:12px;}
+.edu-title{font-weight:600;color:#fff;font-size:14.5px;margin-bottom:10px;}
+.edu-body{font-size:13px;color:var(--text-muted);line-height:1.7;}
+.edu-body strong{color:var(--text);}
+.edu-footer{margin-top:16px;padding-top:14px;border-top:1px solid var(--border-soft);}
+.edu-ativos{font-size:11px;color:var(--text-dim);}
+.edu-ativos span{color:var(--text-muted);font-weight:500;}
+.info-box{background:linear-gradient(135deg,rgba(30,39,97,0.3),var(--bg2));border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:20px;}
+.info-box p{font-size:13px;color:var(--text-muted);line-height:1.7;}
+.info-box strong{color:var(--text);}
+.info-box b{color:var(--gold);}
+
+/* ── EDU ATIVO INDIVIDUAL ── */
+.ativo-edu{margin-top:28px;}
+.ativo-edu-grid{display:flex;flex-direction:column;gap:14px;}
+.ae-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;overflow:hidden;}
+.ae-header{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;transition:background .15s;}
+.ae-header:hover{background:rgba(255,255,255,0.02);}
+.ae-ticker{font-family:var(--serif);font-size:16px;font-weight:600;color:#fff;min-width:80px;}
+.ae-nome{font-size:12.5px;color:var(--text-muted);flex:1;}
+.ae-saldo{font-size:14px;font-weight:600;color:var(--gold);white-space:nowrap;}
+.ae-arrow{color:var(--text-dim);font-size:12px;transition:transform .2s;}
+.ae-body{padding:0 20px;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .2s;}
+.ae-body.open{max-height:400px;padding:0 20px 20px;}
+.ae-desc{font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;}
+.ae-desc strong{color:var(--text);}
+.ae-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.ae-stat{background:var(--bg3);border-radius:10px;padding:12px 14px;flex:1;min-width:100px;}
+.ae-stat-lbl{font-size:10px;color:var(--text-dim);letter-spacing:.4px;margin-bottom:4px;}
+.ae-stat-val{font-size:13.5px;font-weight:600;color:var(--text);}
+
+/* ── PROJETOS ── */
+.proj-list{display:flex;flex-direction:column;gap:14px;}
+.proj{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:22px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;transition:border-color .2s;}
+.proj:hover{border-color:var(--border);}
+.proj-icon{font-size:30px;flex-shrink:0;}
+.proj-info{flex:1;min-width:140px;}
+.proj-nome{font-weight:600;color:#fff;font-size:15px;}
+.proj-data{font-size:12px;color:var(--text-muted);margin-top:4px;}
+.proj-estrategia{font-size:11px;color:var(--text-dim);margin-top:2px;}
+.proj-val{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold);white-space:nowrap;}
+
+/* ── IF ── */
+.if-card{background:linear-gradient(145deg,rgba(46,204,138,0.06),rgba(30,39,97,0.2));border:1px solid rgba(46,204,138,0.18);border-radius:18px;padding:40px;text-align:center;position:relative;overflow:hidden;}
+.if-card::after{content:'';position:absolute;bottom:-50px;right:-50px;width:240px;height:240px;background:radial-gradient(circle,rgba(46,204,138,0.06) 0%,transparent 70%);border-radius:50%;pointer-events:none;}
+.if-val{font-family:var(--serif);font-size:clamp(36px,8vw,66px);font-weight:700;color:var(--green);line-height:1;margin-bottom:8px;}
+.if-lbl{font-size:14px;color:var(--text-muted);margin-bottom:32px;}
+.if-stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;}
+.if-s{text-align:center;}
+.if-sv{font-weight:600;color:#fff;font-size:17px;}
+.if-sl{font-size:11px;color:var(--text-dim);margin-top:3px;letter-spacing:.4px;}
+.if-timeline{margin-top:32px;display:flex;align-items:center;gap:0;background:var(--bg3);border-radius:12px;padding:20px 24px;flex-wrap:wrap;gap:12px;}
+.if-tl-item{flex:1;min-width:100px;text-align:center;}
+.if-tl-item+.if-tl-item{border-left:1px solid var(--border-soft);}
+.if-tl-val{font-size:14px;font-weight:600;color:var(--gold);}
+.if-tl-lbl{font-size:11px;color:var(--text-dim);margin-top:2px;}
+
+/* ── CTA INDICAÇÃO ── */
+.cta{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(30,39,97,0.2));border:1px solid var(--border);border-radius:18px;padding:40px;text-align:center;margin-top:56px;position:relative;overflow:hidden;}
+.cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.06),transparent 60%);pointer-events:none;}
+.cta-title{font-family:var(--serif);font-size:clamp(20px,4vw,28px);color:#fff;font-weight:600;margin-bottom:10px;position:relative;}
+.cta-sub{font-size:14px;color:var(--text-muted);margin-bottom:28px;max-width:480px;margin-left:auto;margin-right:auto;position:relative;line-height:1.65;}
+.cta-btn{display:inline-block;background:var(--gold);color:#0A0C1A;padding:14px 32px;border-radius:50px;font-size:14px;font-weight:700;letter-spacing:.5px;text-decoration:none;transition:opacity .2s,transform .15s;position:relative;}
+.cta-btn:hover{opacity:.88;transform:translateY(-1px);}
+.cta-benefits{display:flex;justify-content:center;gap:24px;margin-top:24px;flex-wrap:wrap;}
+.cta-b{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);}
+.cta-b::before{content:'✓';color:var(--green);font-weight:700;}
+
+/* ── PASSOS ── */
+.passos{display:flex;flex-direction:column;gap:12px;}
+.passo{display:flex;gap:16px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px 22px;align-items:flex-start;}
+.passo-n{width:30px;height:30px;background:var(--gold-dim);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold);flex-shrink:0;}
+.passo-n.ok{background:var(--green-dim);border-color:rgba(46,204,138,0.25);color:var(--green);}
+.passo-t{font-weight:600;color:#fff;font-size:14px;}
+.passo-d{font-size:13px;color:var(--text-muted);margin-top:4px;line-height:1.55;}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border-soft);padding:36px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;margin-top:60px;}
+.f-brand{font-family:var(--serif);font-size:16px;color:var(--gold);font-weight:600;}
+.f-brand span{color:var(--text-muted);font-family:var(--sans);font-size:12px;font-weight:300;display:block;margin-top:3px;letter-spacing:.3px;}
+.f-nota{font-size:11.5px;color:var(--text-dim);max-width:400px;line-height:1.6;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  header{padding:36px 20px 32px;}
+  main{padding:0 16px 60px;}
+  .nav-tabs{padding:0 16px;}
+  footer{padding:28px 20px;flex-direction:column;}
+  .if-stats{gap:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOCK ═══════════════════════════════════════════════════════ -->
+<div id="lock">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <div class="lock-title">Documento Confidencial</div>
+    <div class="lock-sub">Mapa Financeiro Pessoal — Manuela Oliveira<br>Insira a senha para acessar.</div>
+    <input class="lock-input" id="pw" type="password" placeholder="••••••••••" onkeydown="if(event.key==='Enter')unlock()">
+    <button class="lock-btn" onclick="unlock()">Acessar →</button>
+    <div class="lock-error" id="perr">Senha incorreta. Tente novamente.</div>
+  </div>
+</div>
+
+<div id="content">
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════ -->
+<header>
+  <div class="h-eyebrow">Grão | Grupo Primo · Planejamento Financeiro Pessoal</div>
+  <div class="h-name">Manuela Oliveira</div>
+  <div class="h-sub">Mapa Financeiro Pessoal · Junho 2026</div>
+  <div class="h-badges">
+    <span class="badge">Matheus Melo · Planejador Financeiro</span>
+    <span class="badge g">Carteira Ativa</span>
+    <span class="badge">BTG Pactual · Inter PJ</span>
+  </div>
+</header>
+
+<!-- ══ NAV ═════════════════════════════════════════════════════════ -->
+<nav class="nav-tabs">
+  <div class="tab active" onclick="scrollTo(0)">Visão Geral</div>
+  <div class="tab" onclick="document.getElementById('s-rp').scrollIntoView({behavior:'smooth'})">Renda Passiva</div>
+  <div class="tab" onclick="document.getElementById('s-proj').scrollIntoView({behavior:'smooth'})">Projeção</div>
+  <div class="tab" onclick="document.getElementById('s-cart').scrollIntoView({behavior:'smooth'})">Carteira</div>
+  <div class="tab" onclick="document.getElementById('s-edu').scrollIntoView({behavior:'smooth'})">Guia dos Ativos</div>
+  <div class="tab" onclick="document.getElementById('s-vida').scrollIntoView({behavior:'smooth'})">Projetos</div>
+  <div class="tab" onclick="document.getElementById('s-if').scrollIntoView({behavior:'smooth'})">Independência</div>
+</nav>
+
+<main>
+
+<!-- ══ 1 · VISÃO GERAL ════════════════════════════════════════════ -->
+<section id="s-visao">
+  <div class="s-label"><div class="s-num">1</div>Visão Geral</div>
+  <div class="s-title">Seu panorama de Maio 2026</div>
+  <div class="s-desc">Um mês consistente e positivo. Seu fluxo de caixa gerou um saldo expressivo — e sua carteira de investimentos está estruturada e crescendo.</div>
+
+  <div class="msg-card" style="margin-bottom:28px;">
+    <p class="msg-text">
+      Manuela, você está construindo algo sólido. Sei que no começo parece confuso ter dinheiro em vários lugares, ver números oscilando na tela e não saber exatamente o que está acontecendo — mas isso é completamente normal e faz parte do processo.<br><br>
+      O que importa é que a <strong>estratégia está bem estruturada</strong>: sua reserva de emergência está quase 100% constituída, seus projetos de vida têm um caminho financeiro claro, e seus investimentos já estão trabalhando pela sua independência financeira todos os dias — mesmo quando você não está olhando para eles.<br><br>
+      Neste documento você vai entender o que cada investimento significa, por que foi escolhido para você, e como ele encaixa no seu plano. Leia com calma. Qualquer dúvida, pode me chamar.
+    </p>
+    <div class="msg-sig">
+      <div class="msg-sig-line"></div>
+      <div class="msg-sig-name">Matheus Melo · Planejador Financeiro Pessoal · Grão | Grupo Primo</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-dot" style="background:var(--green)"></div>
+      <div class="kpi-lbl">Entrou em Maio</div>
+      <div class="kpi-val">R$41.000</div>
+      <div class="kpi-sub">Remunerações confirmadas</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-dot" style="background:var(--gold)"></div>
+      <div class="kpi-lbl">Saiu em Maio</div>
+      <div class="kpi-val">R$23.652</div>
+      <div class="kpi-sub">Despesas PF + empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-dot" style="background:var(--green)"></div>
+      <div class="kpi-lbl" style="color:var(--green);">Sobrou em Maio</div>
+      <div class="kpi-val" style="color:var(--green);">R$18.680</div>
+      <div class="kpi-sub">Saldo livre para investir</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-dot" style="background:var(--blue)"></div>
+      <div class="kpi-lbl">Total Investido</div>
+      <div class="kpi-val">R$45.324</div>
+      <div class="kpi-sub">BTG Pactual + Inter PJ</div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;">
+    <div class="prog-wrap">
+      <div class="prog-head">
+        <div class="prog-tg">
+          <div class="prog-t">🛡️ Reserva de Emergência</div>
+          <div class="prog-s">Meta: R$40.950,74 · BTG Digital Tesouro Selic (liquidez D+0)</div>
+        </div>
+        <div class="prog-pct">98%</div>
+      </div>
+      <div class="prog-bg"><div class="prog-fill" style="width:98%"></div></div>
+      <div class="prog-meta"><span>R$40.290,02 alocado</span><span>Faltam ~R$660 para 100%</span></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-head">
+        <div class="prog-tg">
+          <div class="prog-t">🌱 Independência Financeira</div>
+          <div class="prog-s">Meta: R$4.018.623 · Renda desejada: R$20.000/mês aos 65 anos</div>
+        </div>
+        <div class="prog-pct" style="color:var(--green);">0,1%</div>
+      </div>
+      <div class="prog-bg"><div class="prog-fill gr" style="width:0.8%"></div></div>
+      <div class="prog-meta"><span>R$5.034 em renda variável</span><span>Cada real conta — o tempo é o maior aliado</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · RENDA PASSIVA ══════════════════════════════════════════ -->
+<section id="s-rp">
+  <div class="s-label"><div class="s-num">2</div>Renda Passiva Mensal</div>
+  <div class="s-title">O dinheiro que trabalha por você</div>
+  <div class="s-desc">Mesmo com a carteira no início, ela já gera uma renda passiva mensal. Com aportes constantes, esse valor vai crescer mês a mês — sem que você precise trabalhar por ele.</div>
+
+  <div class="rp-hero">
+    <div class="rp-valor">R$371,40</div>
+    <div class="rp-lbl">Renda passiva mensal estimada hoje</div>
+    <div class="rp-breakdown">
+      <div class="rp-item">
+        <div class="rp-item-val">R$360,93</div>
+        <div class="rp-item-lbl">JUROS DA RESERVA (CDI)</div>
+      </div>
+      <div class="rp-item">
+        <div class="rp-item-val">R$10,47</div>
+        <div class="rp-item-lbl">DIVIDENDOS DOS FIIs</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-note">
+    <p>💡 <strong>Por que a reserva rende mais que os FIIs agora?</strong> Porque a maior parte do dinheiro ainda está na reserva de emergência — que foi constituída primeiro, como manda a estratégia correta. À medida que você aportar mensalmente nos FIIs e ações, os dividendos vão crescer e superar os juros da reserva. Em 5 anos, estimamos que os dividendos dos FIIs sozinhos podem chegar a <strong>R$800–R$1.200/mês</strong> com aportes regulares de R$3.500/mês.</p>
+  </div>
+</section>
+
+<!-- ══ 3 · PROJEÇÃO ═══════════════════════════════════════════════ -->
+<section id="s-proj">
+  <div class="s-label"><div class="s-num">3</div>Projeção Patrimonial</div>
+  <div class="s-title">Onde você vai estar com consistência</div>
+  <div class="s-desc">Simulação com aporte mensal de R$3.500 e retorno médio de 4% ao ano acima da inflação — cenário realista para investimentos diversificados de longo prazo.</div>
+
+  <div class="chart-wrap">
+    <div class="chart-head">
+      <div class="chart-title">Crescimento do patrimônio de renda variável (32 → 65 anos)</div>
+      <div class="chart-legend">
+        <div class="chart-leg-item"><div class="chart-leg-dot" style="background:var(--green)"></div>Patrimônio projetado</div>
+        <div class="chart-leg-item"><div class="chart-leg-dot" style="background:var(--gold)"></div>Capital aportado</div>
+      </div>
+    </div>
+    <div class="chart-canvas"><canvas id="chartProj"></canvas></div>
+    <div class="chart-meta">
+      <div class="chart-meta-item">
+        <div class="chart-meta-lbl">Em 10 anos</div>
+        <div class="chart-meta-val">R$522.881</div>
+      </div>
+      <div class="chart-meta-item">
+        <div class="chart-meta-lbl">Em 20 anos</div>
+        <div class="chart-meta-val">R$1.294.902</div>
+      </div>
+      <div class="chart-meta-item">
+        <div class="chart-meta-lbl">Aos 65 anos (33 anos)</div>
+        <div class="chart-meta-val" style="color:var(--green)">R$2.890.781</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <p>📌 <strong>O segredo dos juros compostos:</strong> Nos primeiros anos o crescimento parece lento — mas observe o gráfico: a curva sobe de forma acelerada com o tempo. Isso acontece porque os <b>juros rendem sobre os juros anteriores</b>. A simulação usa 4% ao ano real — acima da inflação — que é o retorno histórico realista para uma carteira diversificada de longo prazo. <strong>Você já tomou a decisão mais importante: começar.</strong></p>
+  </div>
+</section>
+
+<!-- ══ 4 · CARTEIRA DETALHADA ════════════════════════════════════ -->
+<section id="s-cart">
+  <div class="s-label"><div class="s-num">4</div>Carteira Detalhada</div>
+  <div class="s-title">Todos os seus investimentos</div>
+  <div class="s-desc">14 ativos distribuídos estrategicamente entre reserva de segurança, geração de renda, crescimento de longo prazo e proteção internacional.</div>
+
+  <!-- Alocação visual -->
+  <div class="chart-wrap" style="margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:16px;">Distribuição por classe de ativo</div>
+    <div class="alloc-bar">
+      <div class="alloc-seg" style="flex:88.9;background:var(--purple);"></div>
+      <div class="alloc-seg" style="flex:3.0;background:var(--blue);"></div>
+      <div class="alloc-seg" style="flex:4.8;background:var(--gold);"></div>
+      <div class="alloc-seg" style="flex:2.2;background:var(--green);"></div>
+      <div class="alloc-seg" style="flex:1.1;background:var(--orange);"></div>
+    </div>
+    <div class="alloc-legend">
+      <div class="alloc-leg"><div class="alloc-dot" style="background:var(--purple)"></div>Renda Fixa 88,9%</div>
+      <div class="alloc-leg"><div class="alloc-dot" style="background:var(--blue)"></div>FIIs 3,0%</div>
+      <div class="alloc-leg"><div class="alloc-dot" style="background:var(--gold)"></div>ETFs 4,8%</div>
+      <div class="alloc-leg"><div class="alloc-dot" style="background:var(--green)"></div>Ações 2,2%</div>
+      <div class="alloc-leg"><div class="alloc-dot" style="background:var(--orange)"></div>Tesouro 1,1%</div>
+    </div>
+    <div class="info-box" style="margin-top:16px;">
+      <p>⚡ <strong>Por que tanta renda fixa?</strong> Porque a reserva de emergência fica aqui — e ela precisa ser segura, estável e de fácil resgate. Com o tempo, à medida que você aportar mensalmente na independência financeira, a fatia de renda variável vai crescer. Essa mudança na distribuição é esperada e faz parte do plano.</p>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ativo</th>
+          <th>Tipo</th>
+          <th>Liquidez</th>
+          <th>Objetivo</th>
+          <th>Saldo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="a-name">BTG Digital Tesouro Selic</div><div class="a-desc">Fundo de renda fixa pós-fixado</div></td>
+          <td><span class="tag rf">Renda Fixa</span></td>
+          <td><span class="liq">D+0</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🛡️ Reserva</span></td>
+          <td class="a-val">R$40.290,02</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">CPTS11</div><div class="a-desc">Capitânia Securities II · FII de Papel</div></td>
+          <td><span class="tag fii">FII</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$296,79</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">FIXA11</div><div class="a-desc">Itaú Asset · ETF de Renda Fixa</div></td>
+          <td><span class="tag etf">ETF</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$714,02</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">GMAT3</div><div class="a-desc">Grupo Mateus · Varejo alimentar</div></td>
+          <td><span class="tag acao">Ação</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$345,10</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">GOLD11</div><div class="a-desc">iShares Gold Trust · Ouro físico em dólar</div></td>
+          <td><span class="tag etf">ETF</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌍 Proteção</span></td>
+          <td class="a-val">R$228,60</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">JURO11</div><div class="a-desc">Itaú Asset · FII de Recebíveis incentivados</div></td>
+          <td><span class="tag fii">FII</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$189,76</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">PRIO3</div><div class="a-desc">PetroRio · Exploração de petróleo e gás</div></td>
+          <td><span class="tag acao">Ação</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$371,82</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">PSEC11</div><div class="a-desc">Pátria Recebíveis · FII de Papel</div></td>
+          <td><span class="tag fii">FII</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$348,00</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">PVBI11</div><div class="a-desc">VBI Prime Properties · FII de Lajes Corporativas</div></td>
+          <td><span class="tag fii">FII</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$216,33</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">Tesouro IPCA+ 2050</div><div class="a-desc">Título público indexado à inflação</div></td>
+          <td><span class="tag tit">Tesouro</span></td>
+          <td><span class="liq">01/08/2050</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$512,15</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">USDB11</div><div class="a-desc">Hashdex · ETF de Renda Fixa Americana</div></td>
+          <td><span class="tag etf">ETF</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌍 Proteção</span></td>
+          <td class="a-val">R$499,55</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">WIZC3</div><div class="a-desc">Wiz Co · Serviços financeiros e seguros</div></td>
+          <td><span class="tag acao">Ação</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$283,42</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">WRLD11</div><div class="a-desc">iShares MSCI World · +9.000 empresas globais</div></td>
+          <td><span class="tag etf">ETF</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌍 Proteção</span></td>
+          <td class="a-val">R$712,90</td>
+        </tr>
+        <tr>
+          <td><div class="a-name">XPML11</div><div class="a-desc">XP Malls · FII de Shoppings</div></td>
+          <td><span class="tag fii">FII</span></td>
+          <td><span class="liq">D+3</span></td>
+          <td><span style="font-size:12px;color:var(--text-muted);">🌱 Independência</span></td>
+          <td class="a-val">R$316,50</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="total-row">
+    <div class="total-lbl">Total Investido</div>
+    <div class="total-val">R$45.324,96</div>
+  </div>
+</section>
+
+<!-- ══ 5 · GUIA DOS ATIVOS ════════════════════════════════════════ -->
+<section id="s-edu">
+  <div class="s-label"><div class="s-num">5</div>Guia dos Seus Ativos</div>
+  <div class="s-title">Entenda o que você tem e por quê</div>
+  <div class="s-desc">Você não precisa ser especialista — mas saber o papel de cada ativo vai te dar segurança para não tomar decisões erradas nas oscilações do dia a dia.</div>
+
+  <!-- Classes de ativos -->
+  <div class="edu-grid">
+    <div class="edu c-rf">
+      <div class="edu-icon">🛡️</div>
+      <div class="edu-title">Renda Fixa — A Proteção</div>
+      <div class="edu-body">
+        O dinheiro que você nunca vai perder. A renda fixa funciona como uma <strong>poupança turbinada</strong>: rende todos os dias, nunca oscila negativamente, e você pode resgatar quando precisar. É onde fica sua reserva de emergência.<br><br>
+        No seu caso, o BTG Digital Tesouro Selic rende cerca de 100% do CDI — hoje em torno de <strong>13% ao ano</strong>. Isso significa que seus R$40.290 crescem aproximadamente <strong>R$360/mês</strong> só parados.
+      </div>
+      <div class="edu-footer">
+        <div class="edu-ativos">Seus ativos: <span>BTG Digital Tesouro Selic</span></div>
+      </div>
+    </div>
+
+    <div class="edu c-fii">
+      <div class="edu-icon">🏢</div>
+      <div class="edu-title">FIIs — A Renda Mensal</div>
+      <div class="edu-body">
+        Imagine ser dona de uma fração de vários imóveis — shoppings, escritórios, galpões logísticos. Todo mês esses imóveis geram <strong>aluguéis</strong>, e esses aluguéis chegam na sua conta como <strong>dividendos isentos de imposto de renda</strong>.<br><br>
+        O preço das cotas oscila no dia a dia (como ações), mas o objetivo principal é a <strong>renda mensal crescente</strong> — não a venda. Com o tempo, você vai receber mais e mais dividendos sem trabalhar por eles.
+      </div>
+      <div class="edu-footer">
+        <div class="edu-ativos">Seus ativos: <span>CPTS11 · JURO11 · PSEC11 · PVBI11 · XPML11</span></div>
+      </div>
+    </div>
+
+    <div class="edu c-acao">
+      <div class="edu-icon">📈</div>
+      <div class="edu-title">Ações — O Crescimento</div>
+      <div class="edu-body">
+        Ao comprar ações, você se torna <strong>sócia de empresas reais</strong>. Quando a empresa cresce e lucra mais, o valor da sua fatia cresce. Algumas empresas também pagam dividendos periodicamente.<br><br>
+        As ações oscilam mais no curto prazo — você vai ver o preço subindo e caindo — mas no <strong>longo prazo (3–10 anos) são os investimentos mais poderosos</strong>. Seus setores: alimentos, petróleo/energia e seguros — todos setores essenciais da economia.
+      </div>
+      <div class="edu-footer">
+        <div class="edu-ativos">Seus ativos: <span>GMAT3 (Alimentos) · PRIO3 (Petróleo) · WIZC3 (Seguros)</span></div>
+      </div>
+    </div>
+
+    <div class="edu c-etf">
+      <div class="edu-icon">🌍</div>
+      <div class="edu-title">ETFs — A Diversificação Global</div>
+      <div class="edu-body">
+        ETF é um ativo que investe em <strong>dezenas ou milhares de empresas de uma vez</strong>. Em vez de escolher uma empresa, você compra uma cesta inteira. Você tem três tipos no BTG:<br><br>
+        <strong>GOLD11:</strong> Barras de ouro físico em dólar — protege em crises.<br>
+        <strong>USDB11:</strong> Renda fixa americana — o mercado mais seguro do mundo.<br>
+        <strong>WRLD11:</strong> Mais de 9.000 empresas de todo o planeta — a diversificação máxima.
+      </div>
+      <div class="edu-footer">
+        <div class="edu-ativos">Seus ativos: <span>GOLD11 · USDB11 · WRLD11 · FIXA11</span></div>
+      </div>
+    </div>
+
+    <div class="edu c-titulo">
+      <div class="edu-icon">🏛️</div>
+      <div class="edu-title">Tesouro IPCA+ — A Proteção da Inflação</div>
+      <div class="edu-body">
+        Você está emprestando dinheiro para o governo e recebendo em troca <strong>juros acima da inflação</strong>. Isso garante que seu poder de compra nunca diminua com o passar dos anos.<br><br>
+        Diferente de um CDB comum, esse título oscila de preço no curto prazo — mas compramos no <strong>momento certo da Selic alta</strong>. Quando a Selic cair, esse título vai se valorizar e venderemos com lucro antes do vencimento em 2050.
+      </div>
+      <div class="edu-footer">
+        <div class="edu-ativos">Seu ativo: <span>Tesouro IPCA+ 2050</span></div>
+      </div>
+    </div>
+
+    <div class="edu c-rf" style="border-color:rgba(240,140,60,0.15);">
+      <div class="edu-icon">⚡</div>
+      <div class="edu-title">Como o Mercado Funciona</div>
+      <div class="edu-body">
+        O mercado passa por <strong>ciclos naturais</strong>. Há momentos em que a renda fixa ganha força. Em outros, as ações se destacam.<br><br>
+        A <strong>Selic</strong> é um dos principais termômetros da economia: quando sobe, ajuda no controle da inflação e tende a tornar a renda fixa mais atrativa; quando cai, ativos de maior prazo e renda variável podem se beneficiar.<br><br>
+        Meu trabalho é acompanhar esses movimentos diariamente e garantir que sua estratégia continue alinhada aos seus objetivos. Na maior parte do tempo, <strong>não fazer mudanças é exatamente o plano.</strong> E quando for hora de agir — seja para ajustar, trocar ou aproveitar oportunidades — eu vou te orientar.<br><br>
+        <strong>Você não precisa tomar decisões financeiras importantes sozinha.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalhamento ativo por ativo -->
+  <div class="ativo-edu">
+    <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase;">↓ Clique em cada ativo para saber mais</div>
+    <div class="ativo-edu-grid">
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag fii" style="font-size:11px;">FII</span>
+          <div class="ae-ticker">CPTS11</div>
+          <div class="ae-nome">Capitânia Securities II</div>
+          <div class="ae-saldo">R$296,79</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>CPTS11</strong> é um <strong>FII de Papel</strong> — ou seja, ele não investe em imóveis físicos, mas em <strong>títulos de dívida do mercado imobiliário</strong> (CRIs — Certificados de Recebíveis Imobiliários). Funciona assim: construtoras e incorporadoras precisam de dinheiro para construir; o CPTS11 empresta esse dinheiro e cobra juros. Esses juros chegam pra você como dividendo mensal, <strong>isento de imposto de renda</strong>. A Capitânia é uma das gestoras mais tradicionais e respeitadas do mercado.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">TIPO</div><div class="ae-stat-val">FII de Papel (CRI)</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">DIVIDENDO EST.</div><div class="ae-stat-val">~0,75%/mês</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">IR</div><div class="ae-stat-val">Isento PF</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">LIQUIDEZ</div><div class="ae-stat-val">D+3</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag fii" style="font-size:11px;">FII</span>
+          <div class="ae-ticker">XPML11</div>
+          <div class="ae-nome">XP Malls</div>
+          <div class="ae-saldo">R$316,50</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>XPML11</strong> é um <strong>FII de Tijolo</strong> focado em <strong>shoppings centers</strong>. Você é dona de uma fração de shoppings espalhados pelo Brasil — e todo mês os lojistas pagam aluguel, que vira o seu dividendo. Shoppings são ativos robustos: mesmo em crises, as pessoas continuam frequentando. A XP Asset é a gestora, e o fundo tem um portfólio de alta qualidade com shoppings premium.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">TIPO</div><div class="ae-stat-val">FII de Tijolo</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">SEGMENTO</div><div class="ae-stat-val">Shoppings</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">DIVIDENDO EST.</div><div class="ae-stat-val">~0,78%/mês</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">IR</div><div class="ae-stat-val">Isento PF</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag fii" style="font-size:11px;">FII</span>
+          <div class="ae-ticker">PVBI11</div>
+          <div class="ae-nome">VBI Prime Properties</div>
+          <div class="ae-saldo">R$216,33</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>PVBI11</strong> investe em <strong>lajes corporativas de alto padrão</strong> — andares inteiros de prédios de escritórios premium em São Paulo. Os inquilinos são grandes empresas e multinacionais, com contratos longos e inadimplência historicamente baixa. É um ativo que combina <strong>renda estável com potencial de valorização</strong> do imóvel físico.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">TIPO</div><div class="ae-stat-val">FII de Tijolo</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">SEGMENTO</div><div class="ae-stat-val">Escritórios AAA</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">DIVIDENDO EST.</div><div class="ae-stat-val">~0,65%/mês</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">IR</div><div class="ae-stat-val">Isento PF</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag fii" style="font-size:11px;">FII</span>
+          <div class="ae-ticker">JURO11</div>
+          <div class="ae-nome">Itaú Asset — Recebíveis Incentivados</div>
+          <div class="ae-saldo">R$189,76</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>JURO11</strong> é um FII de Papel que investe em <strong>CRIs incentivados pelo governo</strong> — uma modalidade especial onde os juros pagos ao fundo são isentos de imposto de renda inclusive para o fundo, não só para o cotista. Isso resulta em uma <strong>eficiência tributária maior</strong> do que a maioria dos FIIs convencionais. Em ambiente de Selic alta, como o atual, esses fundos tendem a pagar dividendos maiores.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">TIPO</div><div class="ae-stat-val">FII de Papel</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">BENEFÍCIO</div><div class="ae-stat-val">Dupla isenção IR</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">DIVIDENDO EST.</div><div class="ae-stat-val">~0,80%/mês</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">LIQUIDEZ</div><div class="ae-stat-val">D+3</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag fii" style="font-size:11px;">FII</span>
+          <div class="ae-ticker">PSEC11</div>
+          <div class="ae-nome">Pátria Recebíveis Imobiliários</div>
+          <div class="ae-saldo">R$348,00</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>PSEC11</strong> é um FII de Papel gerido pela <strong>Pátria Investimentos</strong> — uma das maiores gestoras da América Latina. Investe em CRIs diversificados, com foco em operações de maior rentabilidade. A Pátria tem histórico sólido de gestão ativa, selecionando operações com bom risco-retorno. Bom para quem quer <strong>dividendos mensais robustos</strong> com gestão profissional ativa.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">GESTORA</div><div class="ae-stat-val">Pátria Investimentos</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">TIPO</div><div class="ae-stat-val">FII de Papel (CRI)</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">DIVIDENDO EST.</div><div class="ae-stat-val">~0,82%/mês</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">IR</div><div class="ae-stat-val">Isento PF</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag acao" style="font-size:11px;">Ação</span>
+          <div class="ae-ticker">GMAT3</div>
+          <div class="ae-nome">Grupo Mateus</div>
+          <div class="ae-saldo">R$345,10</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>Grupo Mateus (GMAT3)</strong> é uma das maiores redes de varejo alimentar do Nordeste e Norte do Brasil. Uma empresa que saiu do Maranhão e se tornou uma das maiores do setor no país. <strong>Alimentos são necessários independente de qualquer cenário econômico</strong> — recessão, crescimento, crise ou bonança, as pessoas continuam comprando comida. Empresa com forte crescimento de receita, expansão de lojas e gestão familiar disciplinada.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">SETOR</div><div class="ae-stat-val">Varejo Alimentar</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">ORIGEM</div><div class="ae-stat-val">Maranhão 🇧🇷</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">ESTRATÉGIA</div><div class="ae-stat-val">Crescimento + dividendo</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">PRAZO</div><div class="ae-stat-val">3–5 anos</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag acao" style="font-size:11px;">Ação</span>
+          <div class="ae-ticker">PRIO3</div>
+          <div class="ae-nome">PetroRio</div>
+          <div class="ae-saldo">R$371,82</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">A <strong>PetroRio (PRIO3)</strong> é uma empresa de exploração e produção de petróleo — e uma das mais eficientes do setor no Brasil. Opera campos maduros que outras empresas abandonaram, mas que a PRIO reativa com baixo custo. <strong>O mundo ainda depende de petróleo</strong> para tudo: transporte, energia, plásticos, indústria. A empresa tem histórico de geração de caixa expressivo e gestão eficiente de custos.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">SETOR</div><div class="ae-stat-val">Petróleo e Gás</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">DESTAQUE</div><div class="ae-stat-val">Menor custo de extração</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">ESTRATÉGIA</div><div class="ae-stat-val">Crescimento + caixa</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">PRAZO</div><div class="ae-stat-val">3–5 anos</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag acao" style="font-size:11px;">Ação</span>
+          <div class="ae-ticker">WIZC3</div>
+          <div class="ae-nome">Wiz Co — Seguros</div>
+          <div class="ae-saldo">R$283,42</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">A <strong>Wiz Co (WIZC3)</strong> é uma plataforma de distribuição de seguros e serviços financeiros. O setor de seguros é um dos mais sólidos da economia: as pessoas precisam proteger seu carro, casa, vida e saúde independente de qualquer ciclo econômico. <strong>Seguradoras centenárias existem ao redor do mundo</strong> — é um negócio resiliente. A Wiz atua na distribuição, com modelo de negócio leve em ativos e alta geração de caixa.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">SETOR</div><div class="ae-stat-val">Seguros e Financeiro</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">MODELO</div><div class="ae-stat-val">Distribuição (asset-light)</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">ESTRATÉGIA</div><div class="ae-stat-val">Dividendo + crescimento</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">PRAZO</div><div class="ae-stat-val">3–5 anos</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag etf" style="font-size:11px;">ETF</span>
+          <div class="ae-ticker">GOLD11</div>
+          <div class="ae-nome">Ouro físico em dólar</div>
+          <div class="ae-saldo">R$228,60</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>GOLD11</strong> é um ETF que replica o preço do ouro físico, cotado em dólar. Ao comprar GOLD11, você está efetivamente comprando <strong>barras de ouro</strong> — que ficam custodiadas em um cofre por você. O ouro é a reserva de valor mais antiga da humanidade: em guerras, crises financeiras e momentos de incerteza, <strong>o ouro sempre se valoriza</strong>. É a proteção máxima do seu patrimônio.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">ATIVO</div><div class="ae-stat-val">Ouro físico</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">MOEDA</div><div class="ae-stat-val">Dólar (USD)</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">FUNÇÃO</div><div class="ae-stat-val">Proteção em crises</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">LIQUIDEZ</div><div class="ae-stat-val">D+3</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag etf" style="font-size:11px;">ETF</span>
+          <div class="ae-ticker">USDB11</div>
+          <div class="ae-nome">Renda Fixa Americana</div>
+          <div class="ae-saldo">R$499,55</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>USDB11</strong> investe em <strong>títulos do governo americano (Treasuries)</strong> — considerados os ativos mais seguros do mundo. Você está emprestando dinheiro para os EUA em dólar, recebendo juros americanos. É uma forma de ter <strong>renda fixa em dólar sem abrir conta no exterior</strong>. Protege seu patrimônio em dois sentidos: segurança dos EUA + exposição ao dólar.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">ATIVO</div><div class="ae-stat-val">Treasuries EUA</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">MOEDA</div><div class="ae-stat-val">Dólar (USD)</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">FUNÇÃO</div><div class="ae-stat-val">Renda fixa global</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">LIQUIDEZ</div><div class="ae-stat-val">D+3</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag etf" style="font-size:11px;">ETF</span>
+          <div class="ae-ticker">WRLD11</div>
+          <div class="ae-nome">iShares MSCI World — +9.000 empresas</div>
+          <div class="ae-saldo">R$712,90</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>WRLD11</strong> é o ETF de maior diversificação da sua carteira: investe em <strong>mais de 9.000 empresas de 23 países desenvolvidos</strong>. Dentro dele você tem Amazon, Apple, Microsoft, Nestlé, Toyota, LVMH e milhares de outras. É como ter um pedaço de toda a economia global em um único ativo. A ideia é simples: o mundo como um todo sempre cresceu no longo prazo. Essa é sua aposta no crescimento global.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">EMPRESAS</div><div class="ae-stat-val">+9.000 globais</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">PAÍSES</div><div class="ae-stat-val">23 desenvolvidos</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">FUNÇÃO</div><div class="ae-stat-val">Crescimento global</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">PRAZO IDEAL</div><div class="ae-stat-val">5–10 anos</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ae-card">
+        <div class="ae-header" onclick="toggleAe(this)">
+          <span class="tag tit" style="font-size:11px;">Tesouro</span>
+          <div class="ae-ticker">NTNB 2050</div>
+          <div class="ae-nome">Tesouro IPCA+ com venc. 01/08/2050</div>
+          <div class="ae-saldo">R$512,15</div>
+          <div class="ae-arrow">▼</div>
+        </div>
+        <div class="ae-body">
+          <p class="ae-desc">O <strong>Tesouro IPCA+ 2050</strong> paga <strong>inflação (IPCA) + uma taxa de juros fixa</strong> por ano. Hoje essa taxa está em torno de IPCA + 7% ao ano — excelente. Compramos exatamente porque a Selic está alta: quando ela começar a cair, o preço desse título sobe, e venderemos com lucro — <strong>bem antes de 2050</strong>. É um ativo que combina proteção da inflação com ganho de capital na venda antecipada.</p>
+          <div class="ae-stats">
+            <div class="ae-stat"><div class="ae-stat-lbl">INDEXADOR</div><div class="ae-stat-val">IPCA + taxa fixa</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">ESTRATÉGIA</div><div class="ae-stat-val">Venda antecipada</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">EMISSOR</div><div class="ae-stat-val">Governo Federal</div></div>
+            <div class="ae-stat"><div class="ae-stat-lbl">SEGURANÇA</div><div class="ae-stat-val">Máxima (soberano)</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · PROJETOS DE VIDA ══════════════════════════════════════ -->
+<section id="s-vida">
+  <div class="s-label"><div class="s-num">6</div>Seus Projetos de Vida</div>
+  <div class="s-title">O que estamos construindo juntos</div>
+  <div class="s-desc">Cada sonho tem prazo e valor. Para projetos de curto e médio prazo usamos renda fixa — sem risco de o dinheiro oscilar quando você precisar dele.</div>
+
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-icon">✈️</div>
+      <div class="proj-info">
+        <div class="proj-nome">Viagem para Portugal</div>
+        <div class="proj-data">Data: Agosto de 2026 · Pagamento à vista</div>
+        <div class="proj-estrategia">Estratégia: Renda fixa de curto prazo (CDB/LCI com vencimento em jul/2026)</div>
+      </div>
+      <div class="proj-val">R$15.000</div>
+    </div>
+    <div class="proj">
+      <div class="proj-icon">🏠</div>
+      <div class="proj-info">
+        <div class="proj-nome">Apartamento Próprio</div>
+        <div class="proj-data">Data: Abril de 2027 · Financiamento 360x</div>
+        <div class="proj-estrategia">Estratégia: Renda fixa de médio prazo para a entrada + análise do melhor banco para o financiamento</div>
+      </div>
+      <div class="proj-val">R$800.000</div>
+    </div>
+    <div class="proj">
+      <div class="proj-icon">🚗</div>
+      <div class="proj-info">
+        <div class="proj-nome">Troca de Veículo</div>
+        <div class="proj-data">Data: Janeiro de 2028 · À vista</div>
+        <div class="proj-estrategia">Estratégia: Renda fixa de médio prazo (CDB/LCI com vencimento em dez/2027)</div>
+      </div>
+      <div class="proj-val">R$120.000</div>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin-top:16px;">
+    <p>💡 <strong>Por que renda fixa para os projetos?</strong> Projetos têm data certa — e você não pode correr o risco de o dinheiro estar negativo quando precisar. Por isso <b>jamais</b> colocamos o dinheiro dos projetos em ações ou FIIs. A renda fixa garante que o valor cresce de forma previsível e estará disponível no momento certo.</p>
+  </div>
+</section>
+
+<!-- ══ 7 · INDEPENDÊNCIA FINANCEIRA ══════════════════════════════ -->
+<section id="s-if">
+  <div class="s-label"><div class="s-num">7</div>Independência Financeira</div>
+  <div class="s-title">O maior projeto de todos</div>
+
+  <div class="if-card">
+    <div class="if-val">R$20.000</div>
+    <div class="if-lbl">Renda mensal passiva desejada aos 65 anos</div>
+    <div class="if-stats">
+      <div class="if-s"><div class="if-sv">R$4.018.623</div><div class="if-sl">PATRIMÔNIO NECESSÁRIO</div></div>
+      <div class="if-s"><div class="if-sv">R$4.931/mês</div><div class="if-sl">APORTE MENSAL IDEAL</div></div>
+      <div class="if-s"><div class="if-sv">~33 anos</div><div class="if-sl">TEMPO ATÉ A META</div></div>
+    </div>
+    <div class="if-timeline">
+      <div class="if-tl-item"><div class="if-tl-val">R$5.034</div><div class="if-tl-lbl">HOJE</div></div>
+      <div class="if-tl-item"><div class="if-tl-val">R$522.881</div><div class="if-tl-lbl">EM 10 ANOS</div></div>
+      <div class="if-tl-item"><div class="if-tl-val">R$1.294.902</div><div class="if-tl-lbl">EM 20 ANOS</div></div>
+      <div class="if-tl-item"><div class="if-tl-val" style="color:var(--green)">R$2.890.781</div><div class="if-tl-lbl">AOS 65 ANOS</div></div>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin-top:16px;">
+    <p>📌 <strong>O poder do tempo:</strong> Quem começa aos 32 e aporta R$3.500/mês chega ao mesmo patrimônio que alguém que começa aos 42 e aporta <b>mais de R$6.000/mês</b>. <strong>Você já tomou a decisão mais importante: começar agora.</strong> A projeção usa 4% ao ano real — retorno histórico conservador e realista para carteiras diversificadas de longo prazo.</p>
+  </div>
+</section>
+
+<!-- ══ CTA INDICAÇÃO ══════════════════════════════════════════════ -->
+<div class="cta">
+  <div class="cta-title">Conhece alguém que merece ter um plano assim?</div>
+  <div class="cta-sub">Se esse relatório te trouxe clareza, imagine o impacto que um planejamento personalizado pode ter na vida de uma amiga, familiar ou colega. Indicações são a maior prova de confiança que você pode me dar.</div>
+  <a href="https://wa.me/5599991756837?text=Oi%20Matheus!%20Quero%20indicar%20uma%20amiga%20para%20um%20planejamento%20financeiro" class="cta-btn" target="_blank">Indicar pelo WhatsApp →</a>
+  <div class="cta-benefits">
+    <div class="cta-b">Sem compromisso inicial</div>
+    <div class="cta-b">Atendimento 100% online</div>
+    <div class="cta-b">Metodologia CFP®</div>
+    <div class="cta-b">Plano personalizado</div>
+  </div>
+</div>
+
+<!-- ══ PRÓXIMOS PASSOS ════════════════════════════════════════════ -->
+<section style="margin-top:56px;">
+  <div class="s-label">Ações imediatas</div>
+  <div class="s-title">O que fazer agora</div>
+  <div class="passos">
+    <div class="passo">
+      <div class="passo-n ok">✓</div>
+      <div>
+        <div class="passo-t">Transferência Santander → BTG + Inter realizada</div>
+        <div class="passo-d">Metade do saldo do Santander foi pro Inter (caixa da empresa) e metade pro BTG (conta pessoal). Feito! 💪</div>
+      </div>
+    </div>
+    <div class="passo">
+      <div class="passo-n">1</div>
+      <div>
+        <div class="passo-t">Alocar o saldo no BTG — aguardar orientação do Matheus</div>
+        <div class="passo-d">Assim que confirmar a transferência, o Matheus vai te orientar exatamente onde alocar os R$8.000 dentro do BTG.</div>
+      </div>
+    </div>
+    <div class="passo">
+      <div class="passo-n">2</div>
+      <div>
+        <div class="passo-t">Alocar o Inter PJ no CDB Diária PJ</div>
+        <div class="passo-d">No app do Inter: Investe → Renda Fixa → CDB 100% CDI Diária PJ. O dinheiro rende todos os dias e você resgata quando quiser.</div>
+      </div>
+    </div>
+    <div class="passo">
+      <div class="passo-n">3</div>
+      <div>
+        <div class="passo-t">Resolver sincronização do Santander no Open Finance</div>
+        <div class="passo-d">Algumas transações não apareceram no DashPlan. Vou contatar o banco para resolver — você não precisa fazer nada.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="f-brand">
+    Matheus Melo
+    <span>Planejador Financeiro Pessoal · Grão | Grupo Primo</span>
+  </div>
+  <div class="f-nota">
+    Este documento é confidencial, elaborado exclusivamente para Manuela Oliveira com base em dados fornecidos pela cliente. Não constitui recomendação padronizada. Projeções são estimativas sujeitas a variações de mercado. Junho 2026.
+  </div>
+</footer>
+
+</div><!-- /content -->
+
+<script>
+// ── LOCK ──────────────────────────────────────────────────
+function unlock(){
+  const v=document.getElementById('pw').value;
+  if(v==='manuela2026'){
+    document.getElementById('lock').style.display='none';
+    document.getElementById('content').style.display='block';
+  } else {
+    document.getElementById('perr').style.display='block';
+    document.getElementById('pw').style.borderColor='#E05A5A';
+    setTimeout(()=>{document.getElementById('pw').style.borderColor='';},1200);
+  }
+}
+
+// ── ACCORDION ATIVOS ──────────────────────────────────────
+function toggleAe(header){
+  const body=header.nextElementSibling;
+  const arrow=header.querySelector('.ae-arrow');
+  const isOpen=body.classList.contains('open');
+  document.querySelectorAll('.ae-body.open').forEach(b=>{
+    b.classList.remove('open');
+    b.previousElementSibling.querySelector('.ae-arrow').style.transform='';
+  });
+  if(!isOpen){
+    body.classList.add('open');
+    arrow.style.transform='rotate(180deg)';
+  }
+}
+
+// ── CHART PROJEÇÃO ────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  const anos=[0,1,2,3,4,5,6,7,8,9,10,12,15,18,20,25,30,33];
+  const projecao=[5035,48019,92754,139311,187766,238194,290677,345298,402145,461308,522881,653655,870482,1114905,1294902,1813117,2445856,2890781];
+  const aportado=[5035,47035,89035,131035,173035,215035,257035,299035,341035,383035,425035,509035,635035,761035,845035,1055035,1265035,1391035];
+
+  const ctx=document.getElementById('chartProj').getContext('2d');
+  new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:anos.map(a=>`Ano ${a}`),
+      datasets:[
+        {
+          label:'Patrimônio projetado',
+          data:projecao,
+          borderColor:'#2ECC8A',
+          backgroundColor:'rgba(46,204,138,0.07)',
+          borderWidth:2.5,
+          pointRadius:3,
+          pointBackgroundColor:'#2ECC8A',
+          fill:true,
+          tension:.4
+        },
+        {
+          label:'Capital aportado',
+          data:aportado,
+          borderColor:'#C9A84C',
+          backgroundColor:'rgba(201,168,76,0.04)',
+          borderWidth:1.5,
+          borderDash:[5,4],
+          pointRadius:0,
+          fill:true,
+          tension:.4
+        }
+      ]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#0D1020',
+          borderColor:'rgba(201,168,76,0.25)',
+          borderWidth:1,
+          titleColor:'#E8E8F0',
+          bodyColor:'#8890B0',
+          padding:12,
+          callbacks:{
+            label:ctx=>`${ctx.dataset.label}: R$${ctx.parsed.y.toLocaleString('pt-BR')}`
+          }
+        }
+      },
+      scales:{
+        x:{
+          grid:{color:'rgba(255,255,255,0.04)'},
+          ticks:{color:'#4A5070',font:{size:10}}
+        },
+        y:{
+          grid:{color:'rgba(255,255,255,0.04)'},
+          ticks:{
+            color:'#4A5070',
+            font:{size:10},
+            callback:v=>v>=1000000?`R$${(v/1000000).toFixed(1)}M`:v>=1000?`R$${(v/1000).toFixed(0)}k`:`R$${v}`
+          }
+        }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
